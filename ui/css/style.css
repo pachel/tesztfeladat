@@ -1,0 +1,64 @@
+body{
+    font-size: 14px;
+}
+.navbar-ttr{
+    background: rgb(48,42,87);
+    background: linear-gradient(32deg, rgba(48,42,87,1) 0%, rgba(66,36,116,1) 35%, rgba(91,32,106,1) 100%);
+}
+.dropdown-menu-dark{
+    background: rgb(48,42,87);
+    background: linear-gradient(32deg, rgba(48,42,87,1) 0%, rgba(66,36,116,1) 35%, rgba(91,32,106,1) 100%);
+}
+.navbar-ttr a{
+    color: white;
+}
+
+.navbar-ttr a:hover,.navbar-ttr a:active,.navbar-ttr a:focus{
+    color: #ebb8fb;
+}
+nav.navbar-ttr{
+
+    box-shadow: 0 10px 8px 0 rgba(48,42,87, 0.6);
+}
+nav a.disabled{
+    text-decoration: line-through;
+    color: #9a3db8 !important;
+}
+.navbar-ttr .navbar-toggler {
+    color: rgba(255,255,255,.55);
+    border-color: rgba(255,255,255,.1);
+}
+.navbar-ttr .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.55%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+#content{
+    margin-top: 80px;
+}
+
+.bg-success a{
+    color: white;
+}
+.bg-lightgreen{
+    background-color: #cbecd2 !important;
+}
+.bg-lightorange{
+    background-color: #fbcea9 !important;
+}
+.bg-lightblue a{
+    color: white;
+}
+.bg-danger a{
+    color: white;
+}
+.bg-purple a{
+    color: white;
+}
+.proto{
+    display: none;
+}
+.bg-lightgreen{
+
+}
+.text-white td{
+    color: white !important;
+}

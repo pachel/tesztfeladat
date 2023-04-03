@@ -1,0 +1,31 @@
+{
+  "name": "pachel/teszt",
+  "description": "Tesztfeladat",
+  "type": "projekt",
+  "repositories": [
+    {
+      "type": "github",
+      "url": "https://github.com/pachel/easyframework.git"
+    },
+    {
+      "type" : "git",
+      "url"   : "https://github.com/pachel/tableAdmin.git"
+    }
+  ],
+
+  "autoload": {
+    "files": ["src/assets/functions.php"],
+    "classmap": ["src"]
+  },
+  "require": {
+    "pachel/easyframework": "dev-master",
+    "pachel/tableadmin" : "dev-master",
+    "twbs/bootstrap": "5.*",
+    "fortawesome/font-awesome": "^6.3",
+    "components/jquery": "^3.6",
+    "datatables.net/datatables.net-bs5": "dev-master",
+    "datatables.net/datatables.net-rowgroup-bs5": ">=1.1.0"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}

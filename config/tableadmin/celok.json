@@ -1,0 +1,37 @@
+{
+  "baseUrl": "http://test",
+  "url": "celok",
+  "ajaxUrl": "Penzugy/ajax",
+  "tables": [
+    "celok"
+  ],
+  "last": "ORDER BY nev ASC",
+  "where": "deleted=0 ",
+  "id": "id",
+  "addButton": true,
+  "cols": [
+    {
+      "name": "id",
+      "text": "ID",
+      "alias": "id",
+      "visible": false
+    },
+    {
+      "name": "nev",
+      "text": "Név",
+      "visible": true
+    }
+  ],
+  "formTable": "celok",
+  "form": [
+    [
+      {
+        "name": "nev",
+        "text": "Név",
+        "type": "text",
+        "placeholder": "Név",
+        "required": true
+      }
+    ]
+  ]
+}

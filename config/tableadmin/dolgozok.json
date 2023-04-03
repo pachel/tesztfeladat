@@ -1,0 +1,69 @@
+{
+  "baseUrl" : "http://test",
+  "url" : "dolgozok",
+  "ajaxUrl" : "Penzugy/ajax",
+  "tables" : ["dolgozok AS d1"],
+  "last" : "ORDER BY nev ASC",
+  "where" : "deleted=0 ",
+  "id" : "id",
+  "addButton" : true,
+  "cols": [
+    {
+      "name": "id",
+      "text": "ID",
+      "alias": "id",
+      "visible": false
+    },
+    {
+      "name": "nev",
+      "text": "Név",
+      "visible": true
+    },
+    {
+      "name": "munkakor",
+      "text": "Munkakör",
+      "visible": true
+    },
+    {
+      "name": "IF(d1.vezeto=0,'NINCS',(SELECT d2.nev FROM dolgozok d2 WHERE d2.id=d1.vezeto))",
+      "alias":"vezeto",
+      "text": "Vezető",
+      "visible": true
+    }
+  ],
+  "formTable" : "dolgozok",
+  "form": [
+    [
+      {
+        "name": "nev",
+        "text" : "Név",
+        "type": "text",
+        "placeholder": "Név",
+        "required" : true,
+        "bt_num" : 6
+      },
+      {
+        "name": "munkakor",
+        "text" : "Munkakör",
+        "type": "text",
+        "required" : true,
+        "bt_num" : 3
+      },
+      {
+        "name": "torzsszam",
+        "text" : "Törzsszám",
+        "type": "number",
+        "required" : true,
+        "bt_num" : 3
+      }
+    ],[
+      {
+        "name": "vezeto",
+        "text" : "Vezető",
+        "type": "select",
+        "sqlData": "(SELECT nev as text,id as value FROM dolgozok WHERE deleted=0 AND vezeto=0 ORDER BY nev ASC) UNION (SELECT 'Vezető' AS text,0 AS `value`)",
+        "bt_num" : 12
+      }
+    ]
+  ]
+}
