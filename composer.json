@@ -18,6 +18,7 @@
     "classmap": ["src"]
   },
   "require": {
+    "php": ">=7.4",
     "pachel/easyframework": "dev-master",
     "pachel/tableadmin" : "dev-master",
     "twbs/bootstrap": "5.*",

@@ -3,3 +3,4 @@ nbproject/
 vendor/
 config/dev_*
 composer.lock
+*dev.htaccess
