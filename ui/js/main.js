@@ -32,7 +32,7 @@ var dt = $('#dolgozok').DataTable({
         {data: "buttons2"}
     ],
     createdRow: function (row, data, index) {
-        if (data.kitoltve >=min_ && data.kitoltve<=max_) {
+        if (data.kitoltve >=min_ && data.kitoltve<=max_ && !data.hibas) {
             $( row).addClass('bg-lightgreen');
         }
         else{

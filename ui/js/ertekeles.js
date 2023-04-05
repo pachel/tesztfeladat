@@ -37,6 +37,7 @@ class Ertekeles{
             }).done(function (data){
                 if(data.status === 1){
                     parent.remove();
+                    root.hibasak(data.hibasak);
                 }
                 else{
                     alert(data.message);
@@ -63,6 +64,7 @@ class Ertekeles{
                 if(data.status === 1){
                     if(typeof data.data !== "undefined") {
                         root.addRow(data.data);
+                        root.hibasak(data.hibasak);
                     }
                     else{
                         alert("HIBA");
@@ -76,6 +78,19 @@ class Ertekeles{
                 console.error("HIBA");
             });
         });
+    }
+    hibasak(lista){
+        this.tbody.find("tr").removeClass("bg-danger");
+        if(lista.length===0){
+            return;
+        }
+        for(var x=0;x<lista.length;x++){
+            var szulo = this.tbody.find("input[value="+lista[x]+"]").parents("tr");
+            if(!szulo.hasClass("bg-danger")){
+                szulo.addClass("bg-danger");
+            }
+        }
+
     }
     save_button_event(){
         var root = this;
@@ -98,6 +113,7 @@ class Ertekeles{
                         root.addRow(data.data[x]);
                     }
                     myModal.show();
+                    root.hibasak(data.hibasak);
                 }
                 else{
                     root.userid = 0;

@@ -20,6 +20,6 @@ return [
     "landing" => "vegeredmeny",
     //A minimum kitöltendő értékelések száma
     "min_ct"=>3,
-    //A maximum
+    //A kitölthető célok maximális száma
     "max_ct"=>10
 ];

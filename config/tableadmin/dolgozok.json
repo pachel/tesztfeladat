@@ -61,7 +61,7 @@
         "name": "vezeto",
         "text" : "Vezető",
         "type": "select",
-        "sqlData": "(SELECT nev as text,id as value FROM dolgozok WHERE deleted=0 AND vezeto=0 ORDER BY nev ASC) UNION (SELECT 'Vezető' AS text,0 AS `value`)",
+        "sqlData": "(SELECT nev as text,id as value FROM dolgozok WHERE deleted=0 AND vezeto=0 ORDER BY nev ASC) UNION (SELECT '--- Vezető ---' AS text,0 AS `value`)",
         "bt_num" : 12
       }
     ]

@@ -28,7 +28,7 @@ class Controller extends BaseControler
     public function vegeredmeny(){
         $eredmenyek = $this->app->DB->query(str_replace(["@vezeto"],[$_SESSION["teszt_userid"]],file_get_contents(__DIR__."/../assets/eredmeny1.sql")))->array();
         foreach ($eredmenyek AS &$sor){
-            $sql = str_replace("@lezart",$sor->id,file_get_contents(__DIR__."/../assets/eredmeny2.sql"));
+            $sql = str_replace("@lezart",$sor->id,file_get_contents(__DIR__."/../assets/eredmeny3.sql"));
             $sor->sorok = $this->app->DB->query($sql)->array();
         }
         $this->app->_eredmenyek = $eredmenyek;
@@ -37,13 +37,18 @@ class Controller extends BaseControler
         $return["status"] = 0;
         $return["message"] = "Nincs hiba";
 
-        if($this->torolhetoe($_GET["id"],$return)) {
+      //  if($this->torolhetoe($_GET["id"],$return)) {
+            $torlendo = $this->app->DB->query("SELECT id_dolgozok FROM dolgozok_ertekelesei WHERE id=:id")->params(["id"=>$_GET["id"]])->line();
             $this->app->DB->query("UPDATE dolgozok_ertekelesei SET deleted=1 WHERE id=:id")->params(["id" => $_GET["id"]])->exec();
             $return["status"] = 1;
-        }
+            $hibasak = [];
+            $this->vanehiba($torlendo->id_dolgozok,$hibasak);
+            $return["hibasak"] = $hibasak;
+
+        /*}
         else{
 
-        }
+        }*/
         return $return;
     }
     public function ajaxErtekelesMent(){
@@ -59,6 +64,8 @@ class Controller extends BaseControler
                 return $return;
             }
         }
+
+
         $data = [
             "id_celok"=>$_POST["cel"],
             "id_dolgozok"=>$_GET["id"],
@@ -71,6 +78,9 @@ class Controller extends BaseControler
                 $return["status"] = 1;
             }
         }
+        $hibasak = [];
+        $this->vanehiba($_GET["id"],$hibasak);
+        $return["hibasak"] = $hibasak;
 
         return $return;
     }
@@ -83,6 +93,7 @@ class Controller extends BaseControler
         }
         return $this->prioritasTorolhetoe($result,$return);
     }
+
     private function prioritasTorolhetoe($torlendo_sor,&$return):bool
     {
 
@@ -95,19 +106,40 @@ class Controller extends BaseControler
         }
         $sum = 0;
         foreach ($result AS &$sor){
-            if($torlendo_sor->prioritas == $sor->prioritas){
-                $sor->aktualis--;
-            }
             $sum+=$sor->aktualis;
         }
         $esz = $sum/100;
+        $hibasak = [];
         foreach ($result AS &$sor){
             if(($sor->aktualis/$esz) > $sor->maximum){
-                $return["message"] = "Ez a prioritás nem törölhető, mert a törlés után a(z) ".$sor->nev." prioritású értékelések nagyobb arányban maradnak meg mint ".$sor->maximum."%!\nElőbb törölje a(z) ".$sor->nev." prioritású sorokat!\nHa nem lehetséges, akkor adjon hozzá egy vagy több alacsony prioritású sort és próbálja úgy törölni!";
-                return false;
+                $hibasak[] = $sor->id;
             }
         }
+
         return true;
+    }
+
+    private function vanehiba($dolgozo,&$hibasak = []):bool
+    {
+
+        $sql = str_replace(["@dolgozo","@vezeto"],[$dolgozo,$_SESSION["teszt_userid"]],file_get_contents(__DIR__."/../assets/prioritas_torleshez.sql"));
+        $result = $this->app->DB->query($sql)->array();
+        $sum = 0;
+        foreach ($result AS &$sor){
+            $sum+=$sor->aktualis;
+        }
+        $esz = $sum/100;
+        $hibasak = [];
+        foreach ($result AS &$sor){
+            //echo ($sor->aktualis/$esz) ." ". $sor->maximum."\n";
+            if(($sor->aktualis/$esz) > $sor->maximum){
+                $hibasak[] = $sor->id;
+            }
+        }
+        if(!empty($hibasak)){
+            return true;
+        }
+        return false;
     }
     private function mehete($data,&$return):bool{
         $sql = str_replace(["@dolgozo","@prioritas","@cel"],[$data["id_dolgozok"],$data["prioritas"],$data["id_celok"]],file_get_contents(__DIR__."/../assets/mehete.sql"));
@@ -135,6 +167,9 @@ class Controller extends BaseControler
         $return["max_ct"] = $this->app->max_ct;
         $return["celok"] = $this->app->DB->query("SELECT id FROM celok WHERE deleted=0 ORDER BY nev")->numarray();
         $return["data"] = $this->app->DB->query("SELECT e.id,c.nev AS cel,p.nev AS ertek,p2.nev prioritas FROM dolgozok_ertekelesei e,celok c,ertekek p,prioritasok p2  WHERE e.id_dolgozok=:id AND e.id_lezart_ertekelesek=0 AND e.deleted=0 AND c.id=e.id_celok AND p.pont=e.pont AND p2.ertek=e.prioritas")->params(["id"=>$this->app->GET["id"]])->array();
+        $hibasak = [];
+        $this->vanehiba($_GET["id"],$hibasak);
+        $return["hibasak"] = $hibasak;
         return $return;
     }
     public function ajax_dolgozolista(){
@@ -145,6 +180,7 @@ SELECT id,nev,munkakor,torzsszam,'' as buttons2,
        (SELECT ROUND(SUM(d.pont*d.prioritas)/SUM(d.prioritas)) eredmeny FROM dolgozok_ertekelesei d WHERE d.id_dolgozok=dolgozok.id AND d.deleted=0 AND d.id_lezart_ertekelesek=0) pont
 FROM dolgozok WHERE deleted=0 AND vezeto=:vezeto")->params(["vezeto"=>$_SESSION["teszt_userid"]])->array();
         foreach ($result AS &$item){
+            $item->hibas = $this->vanehiba($item->id);
             $item->pont.="%";
             $item->buttons2 = "<a href=\"".$item->id."\" class='mod'>Értékelés</a>";
         }
@@ -220,7 +256,7 @@ FROM dolgozok WHERE deleted=0 AND vezeto=:vezeto")->params(["vezeto"=>$_SESSION[
             UPDATE 
                     dolgozok_ertekelesei 
             SET id_lezart_ertekelesek=:id_lezart_ertekelesek
-            WHERE id_dolgozok IN(SELECT id FROM dolgozok WHERE vezeto=:id AND deleted=0) AND deleted=0 AND id_lezart_ertekelesek=0
+            WHERE id_dolgozok IN(SELECT dolgozok.id FROM dolgozok WHERE dolgozok.vezeto=:id AND dolgozok.deleted=0) AND deleted=0 AND id_lezart_ertekelesek=0
             ")->params(["id_lezart_ertekelesek"=>$this->app->DB->last_insert_id(),"id"=>$_SESSION["teszt_userid"]])->exec();
         }
         return $return;

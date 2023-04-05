@@ -1,5 +1,12 @@
 <!--[layout:layout.php]-->
 <!--[name:content]-->
+<div class="bd-callout bd-callout-info">
+    Ha nem zöld a háttere minden sornak, akkor az eredményeket nem lehet véglegesíteni, mert valami hiba van!
+    <br>
+    pl.: A felvitt és kitöltött célok cáma nem <b>{{min_ct}} és {{max_ct}}</b> között van, vagy valamelyik prioritás nagyobb arányban van, mint amennyi engedélyezett!
+    <br>
+    Ha valamelyik nagyobb prioritású cél nagyobb arányban van jelen az értékelésben a dolgozó értékelésénél, akkor az piros háttérrelvan kiemelve, ezeket a sorokat törölni kell, vagy hozzá kell adni új sorokat, hogy az arányok jók legyenek!
+</div>
 <h2>Eddigi eredmény: <span class="badge bg-success" id="eredmeny">%</span></h2>
 <table class="table table-striped" id="dolgozok">
     <thead>
@@ -106,6 +113,7 @@
         </div>
     </div>
 </div>
+
 <!--[name:js]-->
 <script>
     var min_ = {{min_ct}};
